@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distance Calculator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('https://cdn.pixabay.com/photo/2023/10/01/17/21/ai-generated-8287826_1280.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        h2 {
+            text-align: center;
+            color: #ffc107;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        label {
+            color: #ffc107;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            border-radius: 0;
+            border-bottom: 2px solid #ffc107;
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #fff;
+            color: #ffc107;
+        }
+        button {
+            background: #ffc107;
+            border: none;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #fff;
+            color: #000;
+        }
+        #result {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+            color: #28a745;
+        }
+        #map {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Distance Calculator</h2>
+        <form id="distance-form">
+            <div class="form-group">
+                <label for="loc1">Location 1 Name:</label>
+                <input type="text" class="form-control" id="loc1" name="loc1" placeholder="Enter Location 1 Name">
+            </div>
+            <div class="form-group">
+                <label for="lat1">Latitude 1:</label>
+                <input type="text" class="form-control" id="lat1" name="lat1" placeholder="Enter Latitude 1">
+            </div>
+            <div class="form-group">
+                <label for="lon1">Longitude 1:</label>
+                <input type="text" class="form-control" id="lon1" name="lon1" placeholder="Enter Longitude 1">
+            </div>
+            <div class="form-group">
+                <label for="loc2">Location 2 Name:</label>
+                <input type="text" class="form-control" id="loc2" name="loc2" placeholder="Enter Location 2 Name">
+            </div>
+            <div class="form-group">
+                <label for="lat2">Latitude 2:</label>
+                <input type="text" class="form-control" id="lat2" name="lat2" placeholder="Enter Latitude 2">
+            </div>
+            <div class="form-group">
+                <label for="lon2">Longitude 2:</label>
+                <input type="text" class="form-control" id="lon2" name="lon2" placeholder="Enter Longitude 2">
+            </div>
+            <button type="button" onclick="calculateDistance()">Calculate</button>
+        </form>
+        <div id="result"></div>
+        <div id="map"></div>
+    </div>
+
+    <script>
+        function calculateDistance() {
+            var loc1 = document.getElementById('loc1').value;
+            var lat1 = parseFloat(document.getElementById('lat1').value);
+            var lon1 = parseFloat(document.getElementById('lon1').value);
+            var loc2 = document.getElementById('loc2').value;
+            var lat2 = parseFloat(document.getElementById('lat2').value);
+            var lon2 = parseFloat(document.getElementById('lon2').value);
+
+            fetch('/calculate_distance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ loc1: loc1, lat1: lat1, lon1: lon1, loc2: loc2, lat2: lat2, lon2: lon2 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Distance: ' + data.distance.toFixed(2) + ' km';
+                document.getElementById('map').innerHTML = data.map;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
